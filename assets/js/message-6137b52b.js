@@ -1,0 +1,1 @@
+import{E as e}from"./element-plus-2afac433.js";const s={success(s){e.success({message:s,duration:2e3})},error(s){e.error({message:s,duration:3e3})},warning(s){e.warning({message:s,duration:2500})},info(s){e.info({message:s,duration:2e3})}};export{s as m};
