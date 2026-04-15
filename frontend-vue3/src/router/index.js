@@ -286,7 +286,7 @@ const routes = [
 
 // 创建路由实例
 const router = createRouter({
-  history: createWebHistory(),
+  history:  createWebHistory('/mushroom-platform/'),
   routes,
   // 路由加载错误处理
   scrollBehavior(to, from, savedPosition) {
