@@ -1,13 +1,19 @@
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
+// 创建数据库连接，兼容多种环境变量命名方式
 const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
+  // 兼容 DB_NAME, MYSQL_DATABASE, MYSQLDATABASE
+  process.env.DB_NAME || process.env.MYSQL_DATABASE || process.env.MYSQLDATABASE || 'mushroom',
+  // 兼容 DB_USER, MYSQL_USER, MYSQLUSER
+  process.env.DB_USER || process.env.MYSQL_USER || process.env.MYSQLUSER || 'root',
+  // 兼容 DB_PASSWORD, MYSQL_PASSWORD, MYSQLPASSWORD
+  process.env.DB_PASSWORD || process.env.MYSQL_PASSWORD || process.env.MYSQLPASSWORD || '',
   {
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
+    // 兼容 DB_HOST, MYSQL_HOST, MYSQLHOST
+    host: process.env.DB_HOST || process.env.MYSQL_HOST || process.env.MYSQLHOST || 'localhost',
+    // 兼容 DB_PORT, MYSQL_PORT, MYSQLPORT
+    port: process.env.DB_PORT || process.env.MYSQL_PORT || process.env.MYSQLPORT || 3306,
     dialect: 'mysql',
     logging: false,
     pool: {
