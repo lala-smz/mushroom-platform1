@@ -658,6 +658,14 @@ app.get('/health', (req, res) => {
   });
 });
 
+// API 健康检查
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: '服务运行正常'
+  });
+});
+
 // 文件上传接口
 app.post('/api/upload', upload.array('files', 10), async (req, res) => {
   try {
