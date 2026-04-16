@@ -27,9 +27,9 @@ class TestController {
       ]);
 
       await Product.bulkCreate([
-        { id: 1, name: '香菇', description: '新鲜香菇，产地直发', price: 25.00, stock: 100, category_id: 2, image: '/images/mushroom1.jpg', status: true, createdAt: new Date(), updatedAt: new Date() },
-        { id: 2, name: '金针菇', description: '新鲜金针菇，口感鲜美', price: 15.00, stock: 200, category_id: 2, image: '/images/mushroom2.jpg', status: true, createdAt: new Date(), updatedAt: new Date() },
-        { id: 3, name: '时令盲盒A', description: '精选时令双菇盲盒', price: 99.00, stock: 50, category_id: 1, image: '/images/box1.jpg', status: true, createdAt: new Date(), updatedAt: new Date() }
+        { id: 1, name: '香菇', description: '新鲜香菇，产地直发', price: 25.00, stock: 100, category: '新鲜菌菇', sellerId: 2, status: 'approved', createdAt: new Date(), updatedAt: new Date() },
+        { id: 2, name: '金针菇', description: '新鲜金针菇，口感鲜美', price: 15.00, stock: 200, category: '新鲜菌菇', sellerId: 2, status: 'approved', createdAt: new Date(), updatedAt: new Date() },
+        { id: 3, name: '时令盲盒A', description: '精选时令双菇盲盒', price: 99.00, stock: 50, category: '时令盲盒', sellerId: 2, status: 'approved', createdAt: new Date(), updatedAt: new Date() }
       ]);
 
       res.status(200).json({
