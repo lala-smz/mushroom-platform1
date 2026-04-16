@@ -13,11 +13,10 @@ class TestController {
     try {
       await sequelize.sync({ force: true });
 
-      const hashedPassword = bcrypt.hashSync('admin123', 10);
       await User.bulkCreate([
-        { id: 1, username: 'admin', password: hashedPassword, email: 'admin@example.com', phone: '13800138000', role: 'admin', status: true, createdAt: new Date(), updatedAt: new Date() },
-        { id: 2, username: 'aaa', password: hashedPassword, email: 'aaa@example.com', phone: '13800138001', role: 'seller', status: true, createdAt: new Date(), updatedAt: new Date() },
-        { id: 3, username: 'user1', password: hashedPassword, email: 'user1@example.com', phone: '13800138002', role: 'user', status: true, createdAt: new Date(), updatedAt: new Date() }
+        { id: 1, username: 'admin', password: '$2a$10$kENosy5h8X2nBcrWgn3zaOu6ck1gJR9/6GMSJTOllv/sySZDLsrzC', email: 'admin@example.com', phone: '13800138000', role: 'admin', status: true, createdAt: new Date(), updatedAt: new Date() },
+        { id: 2, username: 'aaa', password: '$2a$10$kENosy5h8X2nBcrWgn3zaOu6ck1gJR9/6GMSJTOllv/sySZDLsrzC', email: 'aaa@example.com', phone: '13800138001', role: 'seller', status: true, createdAt: new Date(), updatedAt: new Date() },
+        { id: 3, username: 'user1', password: '$2a$10$kENosy5h8X2nBcrWgn3zaOu6ck1gJR9/6GMSJTOllv/sySZDLsrzC', email: 'user1@example.com', phone: '13800138002', role: 'user', status: true, createdAt: new Date(), updatedAt: new Date() }
       ]);
 
       await Category.bulkCreate([
