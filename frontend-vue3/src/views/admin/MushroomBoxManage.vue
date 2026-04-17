@@ -1,4 +1,4 @@
-<template>
+﻿﻿<template>
   <div class="admin-mushroom-boxes">
     <h1>盲盒管理</h1>
     
@@ -1717,7 +1717,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import api from '../../api'
 import { useUserStore } from '../../stores/useUserStore'
 import { useMushroomBoxStore } from '../../stores/useMushroomBoxStore'
-import { getImageUrl, handleImageError, DEFAULT_PLACEHOLDER_URL } from '../../utils/imageUtils'
+import { getImageUrl, handleImageError, DEFAULT_PLACEHOLDER_URL, getUploadUrl } from '../../utils/imageUtils'
 
 // 获取用户存储
 const userStore = useUserStore()
@@ -1783,9 +1783,7 @@ const previewDialogVisible = ref(false)
 const previewImageUrl = ref('')
 
 // 上传地址
-const uploadAction = computed(() => {
-  return '/api/upload'
-})
+const uploadAction = getUploadUrl()
 
 // 详情对话框相关
 const loadingDetail = ref(false)

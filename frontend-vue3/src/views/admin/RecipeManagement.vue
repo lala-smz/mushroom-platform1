@@ -463,7 +463,7 @@
           <el-upload
             v-model:file-list="imageFileList"
             class="recipe-upload"
-            action="/api/upload"
+            :action="uploadUrl"
             :on-success="handleImageUpload"
             :on-error="handleUploadError"
             :limit="1"
@@ -941,7 +941,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { useRecipeStore } from '../../stores/useRecipeStore'
 import { processIngredients, processCustomOption, buildCustomOption } from '../../utils/recipeUtils'
 import api from '../../api'
-import { getImageUrl, handleImageError, DEFAULT_PLACEHOLDER_URL } from '../../utils/imageUtils'
+import { getImageUrl, handleImageError, DEFAULT_PLACEHOLDER_URL, getUploadUrl } from '../../utils/imageUtils'
 import {
   DIFFICULTY_OPTIONS,
   CUISINE_OPTIONS,
@@ -1045,6 +1045,7 @@ const filterForm = reactive({
 const customFlavor = ref('')
 const customCuisine = ref('')
 
+const uploadUrl = getUploadUrl()
 const dialogVisible = ref(false)
 const isEdit = ref(false)
 const recipeForm = ref(null)

@@ -38,8 +38,10 @@ class WebSocketService {
 
     // 创建连接Promise
     this.connectionPromise = new Promise((resolve, reject) => {
-      // 创建Socket.IO实例
-      const wsUrl = 'http://localhost:3003';
+      // 创建Socket.IO实例 - 使用Railway后端地址用于生产环境
+      const wsUrl = process.env.NODE_ENV === 'production' 
+        ? 'wss://grateful-renewal-production-b1b1.up.railway.app' 
+        : 'http://localhost:3003';
       console.log('WebSocket连接地址:', wsUrl);
       
       this.socket = io(wsUrl, {

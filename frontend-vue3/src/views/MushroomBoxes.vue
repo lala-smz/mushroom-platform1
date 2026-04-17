@@ -147,19 +147,19 @@
               :key="index"
             >
               <img 
-                :src="image || '/images/placeholder-mushroom-300.svg'" 
-                :alt="box.name" 
-                class="box-image" 
-                @error="(e) => e.target.src = '/images/placeholder-mushroom-300.svg'"
-              >
+              :src="image || getPlaceholderImage('300')" 
+              :alt="box.name" 
+              class="box-image" 
+              @error="(e) => e.target.src = getPlaceholderImage('300')"
+            >
             </el-carousel-item>
           </el-carousel>
           <img 
             v-else
-            :src="(box.images && box.images[0]) || box.image || '/images/placeholder-mushroom-300.svg'" 
+            :src="(box.images && box.images[0]) || box.image || getPlaceholderImage('300')" 
             :alt="box.name" 
             class="box-image" 
-            @error="(e) => e.target.src = '/images/placeholder-mushroom-300.svg'"
+            @error="(e) => e.target.src = getPlaceholderImage('300')"
           >
           <div class="season-tag">
             {{ box.season }}季
@@ -182,9 +182,9 @@
               class="item-preview"
             >
               <img 
-                :src="item.image || item.mushroom?.image || '/images/placeholder-mushroom-50.svg'" 
+                :src="item.image || item.mushroom?.image || '/mushroom-platform/images/placeholder-mushroom-50.svg'" 
                 :alt="item.mushroomName || item.mushroom?.name || '菌菇'" 
-                @error="(e) => e.target.src = '/images/placeholder-mushroom-50.svg'"
+                @error="(e) => e.target.src = '/mushroom-platform/images/placeholder-mushroom-50.svg'"
               >
               <span>{{ item.mushroomName || item.mushroom?.name || '菌菇' }}</span>
             </div>
@@ -232,9 +232,9 @@
         <div class="result-content">
           <div class="result-image">
             <img 
-              :src="drawResult.mushroom?.image || '/images/placeholder-mushroom-150.svg'" 
+              :src="drawResult.mushroom?.image || '/mushroom-platform/images/placeholder-mushroom-150.svg'" 
               :alt="drawResult.mushroom?.name || '未知菌菇'" 
-              @error="(e) => e.target.src = '/images/placeholder-mushroom-150.svg'"
+              @error="(e) => e.target.src = '/mushroom-platform/images/placeholder-mushroom-150.svg'"
             >
           </div>
           <div class="result-info">
@@ -310,6 +310,7 @@ import { Box, Refresh, Search } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import eventBus, { EventTypes } from '../utils/eventBus.js'
 import MushroomBoxDraw from '../components/MushroomBoxDraw.vue'
+import { getPlaceholderImage } from '../utils/imageUtils'
 
 const router = useRouter()
 const boxStore = useMushroomBoxStore()

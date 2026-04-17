@@ -7,6 +7,11 @@ export default defineConfig({
   root: path.resolve(__dirname, '.'),
   base:'/mushroom-platform/',
   plugins: [vue()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src')
+    }
+  },
   server: {
     port: 5174,
     hmr: {

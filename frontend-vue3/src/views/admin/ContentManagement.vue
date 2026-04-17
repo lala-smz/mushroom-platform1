@@ -37,9 +37,9 @@
             >
               <div class="content-image">
                 <img
-                  :src="mushroom.image || '/images/placeholder-mushroom-300.svg'"
+                  :src="mushroom.image || getPlaceholderImage('300')"
                   :alt="mushroom.name"
-                  @error="(e) => e.target.src = '/images/placeholder-mushroom-300.svg'"
+                  @error="(e) => e.target.src = getPlaceholderImage('300')"
                 >
               </div>
               <div class="content-info">
@@ -101,9 +101,9 @@
             >
               <div class="content-image">
                 <img
-                  :src="recipe.image || '/images/placeholder-mushroom-300.svg'"
+                  :src="recipe.image || getPlaceholderImage('300')"
                   :alt="recipe.name"
-                  @error="(e) => e.target.src = '/images/placeholder-mushroom-300.svg'"
+                  @error="(e) => e.target.src = getPlaceholderImage('300')"
                 >
               </div>
               <div class="content-info">
@@ -169,9 +169,9 @@
             >
               <div class="content-image">
                 <img
-                  :src="video.thumbnailUrl || '/images/placeholder-mushroom-300.svg'"
+                  :src="video.thumbnailUrl || getPlaceholderImage('300')"
                   :alt="video.title"
-                  @error="(e) => e.target.src = '/images/placeholder-mushroom-300.svg'"
+                  @error="(e) => e.target.src = getPlaceholderImage('300')"
                 >
               </div>
               <div class="content-info">
@@ -907,6 +907,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import api from '../../api'
+import { getPlaceholderImage } from '../../utils/imageUtils'
 
 // 标签页
 const activeTab = ref('mushroom')

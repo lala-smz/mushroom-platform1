@@ -71,19 +71,19 @@
               :key="index"
             >
               <img
-                :src="image || '/images/placeholder-mushroom-300.svg'"
+                :src="image || DEFAULT_PLACEHOLDER_URL"
                 :alt="boxStore.currentBox.name"
                 class="main-image"
-                @error="(e) => e.target.src = '/images/placeholder-mushroom-300.svg'"
+                @error="(e) => e.target.src = DEFAULT_PLACEHOLDER_URL"
               >
             </el-carousel-item>
           </el-carousel>
           <img
             v-else
-            :src="(boxStore.currentBox.images && boxStore.currentBox.images[0]) || boxStore.currentBox.image || '/images/placeholder-mushroom-300.svg'"
+            :src="(boxStore.currentBox.images && boxStore.currentBox.images[0]) || boxStore.currentBox.image || DEFAULT_PLACEHOLDER_URL"
             :alt="boxStore.currentBox.name"
             class="main-image"
-            @error="(e) => e.target.src = '/images/placeholder-mushroom-300.svg'"
+            @error="(e) => e.target.src = DEFAULT_PLACEHOLDER_URL"
           >
         </div>
         
@@ -256,10 +256,10 @@
               class="mushroom-item"
             >
               <img
-                :src="item.image || item.mushroom?.image || '/images/placeholder-mushroom-150.svg'"
+                :src="item.image || item.mushroom?.image || getPlaceholderImage('150')"
                 :alt="item.mushroomName || item.mushroom?.name"
                 class="mushroom-image"
-                @error="(e) => e.target.src = '/images/placeholder-mushroom-150.svg'"
+                @error="(e) => e.target.src = getPlaceholderImage('150')"
               >
               <div class="mushroom-info">
                 <h3 class="mushroom-name">
@@ -837,10 +837,10 @@
               >
                 <div class="video-thumbnail-container">
                   <img 
-                    :src="video.thumbnail || '/images/placeholder-mushroom-150.svg'" 
+                    :src="video.thumbnail || getPlaceholderImage('150')" 
                     :alt="video.title" 
                     class="video-thumbnail" 
-                    @error="(e) => e.target.src = '/images/placeholder-mushroom-150.svg'"
+                    @error="(e) => e.target.src = getPlaceholderImage('150')"
                   >
                   <div class="video-duration">
                     {{ formatVideoDuration(video.duration) }}
@@ -898,7 +898,7 @@ import { useMessageStore } from '../stores/useMessageStore'
 import VideoPlayer from '../components/VideoPlayer.vue'
 import ChatPopup from '../components/ChatPopup.vue'
 import dayjs from 'dayjs'
-import { getImageUrl, handleImageError, DEFAULT_PLACEHOLDER_URL } from '../utils/imageUtils'
+import { getImageUrl, handleImageError, DEFAULT_PLACEHOLDER_URL, getPlaceholderImage } from '../utils/imageUtils'
 import { apiClient } from '../api'
 import {
   DIFFICULTY_OPTIONS,
@@ -2000,7 +2000,7 @@ const fetchVideos = async (box) => {
         id: video.id,
         title: video.title || '未命名视频',
         description: video.description || '',
-        thumbnail: video.thumbnailUrl || video.thumbnail || video.coverImage || '/images/placeholder-mushroom-150.svg',
+        thumbnail: video.thumbnailUrl || video.thumbnail || video.coverImage || getPlaceholderImage('150'),
         url: video.videoUrl || video.url || '',
         duration: video.duration || 0,
         views: video.viewCount || video.views || 0,

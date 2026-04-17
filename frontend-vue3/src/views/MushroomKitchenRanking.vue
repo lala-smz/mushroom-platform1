@@ -111,10 +111,10 @@
             </div>
             <div class="work-image-container">
               <img
-                :src="work.imageUrl || '/images/placeholder-mushroom-300.svg'"
+                :src="work.imageUrl || getPlaceholderImage('300')"
                 :alt="work.title"
                 class="work-image"
-                @error="(e) => e.target.src = '/images/placeholder-mushroom-300.svg'"
+                @error="(e) => e.target.src = getPlaceholderImage('300')"
               >
             </div>
             <div class="work-info">
@@ -164,10 +164,10 @@
             </div>
             <div class="work-image-container">
               <img
-                :src="work.imageUrl || '/images/placeholder-mushroom-300.svg'"
+                :src="work.imageUrl || getPlaceholderImage('300')"
                 :alt="work.title"
                 class="work-image"
-                @error="(e) => e.target.src = '/images/placeholder-mushroom-300.svg'"
+                @error="(e) => e.target.src = getPlaceholderImage('300')"
               >
             </div>
             <div class="work-info">
@@ -246,6 +246,7 @@ import { useWorkStore } from '../stores/useWorkStore'
 import * as echarts from 'echarts'
 import { apiClient } from '../api/index.js'
 import webSocketService from '../utils/websocket'
+import { getPlaceholderImage } from '../utils/imageUtils'
 
 const router = useRouter()
 const workStore = useWorkStore()

@@ -1,4 +1,4 @@
-<template>
+﻿﻿<template>
   <div class="product-upload-container">
     <h2>{{ isEdit ? '编辑商品' : '上传商品' }}</h2>
     
@@ -214,7 +214,7 @@ import { Plus, ZoomIn, Delete } from '@element-plus/icons-vue'
 import { useProductStore } from '../../stores/useProductStore'
 import { useUserStore } from '../../stores/useUserStore'
 import { message } from '../../utils/message'
-import { getImageUrl, handleImageError, DEFAULT_PLACEHOLDER_URL } from '../../utils/imageUtils'
+import { getImageUrl, handleImageError, DEFAULT_PLACEHOLDER_URL, getUploadUrl } from '../../utils/imageUtils'
 import { apiClient } from '../../api'
 
 const router = useRouter()
@@ -223,7 +223,7 @@ const productStore = useProductStore()
 const formRef = ref()
 
 // 上传URL
-const uploadUrl = '/api/upload'
+const uploadUrl = getUploadUrl()
 
 // 是否为编辑模式
 const isEdit = computed(() => !!route.query.id)

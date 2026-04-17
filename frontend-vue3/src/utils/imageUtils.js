@@ -1,70 +1,61 @@
+import { uploadConfig } from '../config/upload.js'
 
-export const DEFAULT_PLACEHOLDER_URL = 'https://via.placeholder.com/800x600/e2e8f0/6b7289?text=暂无图片'
+const BASE_URL = '/mushroom-platform/'
 
-export const SMALL_PLACEHOLDER_URL = 'https://via.placeholder.com/200x150/e2e8f0/6b7289?text=暂无图片'
-
-export function getImageUrl(imageUrl, forceRefresh = false) {
-  console.log('[imageUtils] 原始图片URL:', imageUrl, 'forceRefresh:', forceRefresh)
+export function getImageUrl(imagePath) {
+  if (!imagePath) {
+    return getPlaceholderImage()
+  }
   
-  if (!imageUrl || imageUrl.trim() === '') {
-    console.log('[imageUtils] 图片URL为空，返回占位图')
-    return DEFAULT_PLACEHOLDER_URL
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    return imagePath
   }
-
-  let url = imageUrl.trim()
-  console.log('[imageUtils] 处理后的URL:', url)
-
-  if (url.startsWith('http://') || url.startsWith('https://')) {
-    console.log('[imageUtils] 完整URL，直接返回:', url)
-    const finalUrl = forceRefresh ? addCacheBuster(url) : url
-    return finalUrl
+  
+  if (imagePath.startsWith('/uploads/')) {
+    return uploadConfig.imageUrl + imagePath.replace('/uploads/', '')
   }
-
-  if (url.startsWith('/uploads/')) {
-    const fullUrl = `http://localhost:3303${url}`
-    console.log('[imageUtils] 相对路径，补全:', fullUrl)
-    const finalUrl = forceRefresh ? addCacheBuster(fullUrl) : fullUrl
-    return finalUrl
+  
+  if (imagePath.startsWith('/mushrooms/')) {
+    return uploadConfig.mushroomUrl + imagePath.replace('/mushrooms/', '')
   }
-
-  if (url.startsWith('uploads/')) {
-    const fullUrl = `http://localhost:3303/${url}`
-    console.log('[imageUtils] uploads开头，补全:', fullUrl)
-    const finalUrl = forceRefresh ? addCacheBuster(fullUrl) : fullUrl
-    return finalUrl
+  
+  if (imagePath.startsWith('uploads/')) {
+    return uploadConfig.imageUrl + imagePath.replace('uploads/', '')
   }
-
-  if (url.startsWith('/')) {
-    const fullUrl = `http://localhost:3303${url}`
-    console.log('[imageUtils] /开头，补全:', fullUrl)
-    const finalUrl = forceRefresh ? addCacheBuster(fullUrl) : fullUrl
-    return finalUrl
+  
+  if (imagePath.startsWith('mushrooms/')) {
+    return uploadConfig.mushroomUrl + imagePath.replace('mushrooms/', '')
   }
-
-  const fullUrl = `http://localhost:3303/uploads/${url}`
-  console.log('[imageUtils] 默认补全:', fullUrl)
-  const finalUrl = forceRefresh ? addCacheBuster(fullUrl) : fullUrl
-  return finalUrl
+  
+  return getPlaceholderImage()
 }
 
-function addCacheBuster(url) {
-  const separator = url.includes('?') ? '&' : '?'
-  const timestamp = Date.now()
-  const random = Math.floor(Math.random() * 10000)
-  return `${url}${separator}_t=${timestamp}&_r=${random}`
-}
-
-export function getSmallImageUrl(imageUrl) {
-  const result = getImageUrl(imageUrl)
-  if (result === DEFAULT_PLACEHOLDER_URL) {
-    return SMALL_PLACEHOLDER_URL
+export function getPlaceholderImage(size = '300') {
+  const placeholderImages = {
+    '150': BASE_URL + 'images/placeholder-mushroom-150.svg',
+    '300': BASE_URL + 'images/placeholder-mushroom-300.svg',
+    '400': BASE_URL + 'images/placeholder-mushroom-400.svg',
+    '800': BASE_URL + 'images/placeholder-mushroom-800.svg'
   }
-  return result
+  
+  return placeholderImages[size] || placeholderImages['300']
 }
 
-export function handleImageError(event, fallbackUrl = DEFAULT_PLACEHOLDER_URL) {
-  console.warn('[imageUtils] 图片加载失败:', event.target.src)
-  event.target.onerror = null
-  event.target.src = fallbackUrl
+export function getUploadUrl() {
+  return uploadConfig.uploadUrl
 }
 
+export function formatImages(images) {
+  if (!images || !Array.isArray(images)) {
+    return [getPlaceholderImage()]
+  }
+  
+  return images.map(img => getImageUrl(img))
+}
+
+export const DEFAULT_PLACEHOLDER_URL = getPlaceholderImage()
+
+export function handleImageError(event) {
+  const target = event.target
+  target.src = DEFAULT_PLACEHOLDER_URL
+}

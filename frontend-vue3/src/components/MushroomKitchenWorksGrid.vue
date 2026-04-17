@@ -39,7 +39,7 @@
       >
         <div class="work-image-container">
           <img 
-            :src="work.imageUrl || '/images/placeholder-mushroom-300.svg'" 
+            :src="getImageUrl(work.imageUrl) || getPlaceholderImage()" 
             :alt="work.title" 
             class="work-image"
             loading="lazy"
@@ -131,6 +131,7 @@
 import { useRouter } from 'vue-router'
 import { StarFilled, Delete, Edit, Star } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
+import { getPlaceholderImage, getImageUrl } from '../utils/imageUtils'
 
 defineProps({
   works: {
@@ -200,7 +201,7 @@ const handleImageError = (event, work) => {
   console.error('   尝试加载的 URL:', event.target.src)
   
   // 使用占位图
-  event.target.src = '/images/placeholder-mushroom-300.svg'
+  event.target.src = getPlaceholderImage()
 }
 
 const formatDate = (dateString) => {

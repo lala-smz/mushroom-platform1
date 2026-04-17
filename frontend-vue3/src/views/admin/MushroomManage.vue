@@ -48,9 +48,9 @@
       >
         <div class="mushroom-image">
           <img
-            :src="mushroom.image || '/images/placeholder-mushroom-300.svg'"
+            :src="mushroom.image || getPlaceholderImage('300')"
             :alt="mushroom.name"
-            @error="(e) => e.target.src = '/images/placeholder-mushroom-300.svg'"
+            @error="(e) => e.target.src = getPlaceholderImage('300')"
           >
         </div>
         <div class="mushroom-info">
@@ -233,6 +233,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useMushroomStore } from '../../stores/useMushroomStore'
+import { getPlaceholderImage } from '../../utils/imageUtils'
 
 const mushroomStore = useMushroomStore()
 const dialogVisible = ref(false)

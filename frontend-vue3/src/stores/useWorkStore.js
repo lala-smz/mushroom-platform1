@@ -4,6 +4,7 @@ import { shallowRef } from 'vue'
 import { apiClient } from '../api/index.js'
 import { useUserStore } from './useUserStore.js'
 import eventBus, { EventTypes } from '../utils/eventBus.js'
+import { getImageUrl } from '../utils/imageUtils.js'
 
 /**
  * 日志记录辅助函数
@@ -416,7 +417,7 @@ export const useWorkStore = defineStore('work', {
             const formattedWorks = works.map(work => ({
               id: work.id,
               title: work.title,
-              imageUrl: work.imageUrl,
+              imageUrl: getImageUrl(work.imageUrl),
               rating: work.rating,
               authorName: work.user?.username || work.authorName || '未知用户',
               authorId: work.userId || work.authorId,
@@ -462,7 +463,7 @@ export const useWorkStore = defineStore('work', {
             const formattedWorks = works.map(work => ({
               id: work.id,
               title: work.title,
-              imageUrl: work.imageUrl,
+              imageUrl: getImageUrl(work.imageUrl),
               rating: work.rating,
               authorName: work.user?.username || work.authorName || '未知用户',
               authorId: work.userId || work.authorId,
@@ -510,7 +511,7 @@ export const useWorkStore = defineStore('work', {
             const formattedWorks = works.map(work => ({
               id: work.id,
               title: work.title,
-              imageUrl: work.imageUrl,
+              imageUrl: getImageUrl(work.imageUrl),
               rating: work.rating,
               authorName: work.user?.username || work.authorName || '未知用户',
               authorId: work.userId || work.authorId,
@@ -565,7 +566,7 @@ export const useWorkStore = defineStore('work', {
             this.currentWork = {
               id: workData.id,
               title: workData.title,
-              imageUrl: workData.imageUrl,
+              imageUrl: getImageUrl(workData.imageUrl),
               rating: workData.rating,
               authorId: workData.userId || workData.authorId,
               authorName: workData.user?.username || workData.authorName || '未知用户',
@@ -619,7 +620,7 @@ export const useWorkStore = defineStore('work', {
             const formattedWorks = works.map(work => ({
               id: work.id,
               title: work.title,
-              imageUrl: work.imageUrl,
+              imageUrl: getImageUrl(work.imageUrl),
               rating: work.rating,
               authorName: work.user?.username || work.authorName || '未知用户',
               authorId: work.userId || work.authorId,
@@ -694,7 +695,7 @@ export const useWorkStore = defineStore('work', {
             const formattedWorks = works.map(work => ({
               id: work.id,
               title: work.title,
-              imageUrl: work.imageUrl,
+              imageUrl: getImageUrl(work.imageUrl),
               rating: work.rating,
               authorName: work.user?.username || work.authorName || '未知用户',
               authorId: work.userId || work.authorId,
@@ -2050,7 +2051,7 @@ export const useWorkStore = defineStore('work', {
             const formattedWorks = works.map(work => ({
               id: work.id,
               title: work.title,
-              imageUrl: work.imageUrl,
+              imageUrl: getImageUrl(work.imageUrl),
               rating: work.rating,
               authorName: work.user?.username || work.authorName || '未知用户',
               authorId: work.userId || work.authorId,

@@ -831,7 +831,7 @@ import { getImageUrl, handleImageError, DEFAULT_PLACEHOLDER_URL } from '../../ut
 import VideoPlayer from '../../components/VideoPlayer.vue'
 
 // 后端API基础URL
-const API_BASE_URL = 'http://localhost:3303/api'
+const API_BASE_URL = 'https://grateful-renewal-production-b1b1.up.railway.app/api'
 
 // 获取上传请求头（包含token）
 const getUploadHeaders = () => {

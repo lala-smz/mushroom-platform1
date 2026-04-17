@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="app">
     <ErrorBoundary>
       <!-- 全局通知组件 -->

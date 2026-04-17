@@ -19,10 +19,10 @@
       <!-- 作品图片 -->
       <div class="work-image-section">
         <img
-          :src="work?.imageUrl || '/images/placeholder-mushroom-300.svg'"
+          :src="work?.imageUrl || getPlaceholderImage('300')"
           :alt="work?.title"
           class="work-image"
-          @error="(e) => e.target.src = '/images/placeholder-mushroom-300.svg'"
+          @error="(e) => e.target.src = getPlaceholderImage('300')"
         >
       </div>
 
@@ -478,10 +478,10 @@
         >
           <div class="related-work-image-container">
             <img 
-              :src="relatedWork.imageUrl || '/images/placeholder-mushroom-300.svg'" 
+              :src="relatedWork.imageUrl || getPlaceholderImage('300')" 
               :alt="relatedWork.title" 
               class="related-work-image"
-              @error="(e) => e.target.src = '/images/placeholder-mushroom-300.svg'"
+              @error="(e) => e.target.src = getPlaceholderImage('300')"
             >
           </div>
           <h3 class="related-work-title">
@@ -574,6 +574,7 @@ import { ElMessage } from 'element-plus'
 import StarRating from '../components/StarRating.vue'
 import RatingTrendChart from '../components/RatingTrendChart.vue'
 import webSocketService from '../utils/websocket'
+import { getPlaceholderImage } from '../utils/imageUtils'
 
 const route = useRoute()
 const router = useRouter()

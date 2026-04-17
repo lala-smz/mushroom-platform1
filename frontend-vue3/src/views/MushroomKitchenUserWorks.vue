@@ -396,7 +396,7 @@
             </div>
             <el-upload
               class="image-uploader"
-              action="/api/upload"
+              :action="uploadUrl"
               :on-success="handleImageUploadSuccess"
               :on-error="handleImageUploadError"
               :before-upload="beforeImageUpload"
@@ -449,8 +449,10 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import WorksGrid from '../components/MushroomKitchenWorksGrid.vue'
 import { apiClient } from '../api/index.js'
 import eventBus, { EventTypes } from '../utils/eventBus.js'
+import { getUploadUrl, getImageUrl } from '../utils/imageUtils.js'
 
 const workStore = useWorkStore()
+const uploadUrl = getUploadUrl()
 const editFormRef = ref(null)
 
 const route = useRoute()
@@ -859,7 +861,7 @@ const fetchUserWorks = async () => {
     userWorks.value = worksData.map(work => ({
       id: work.id,
       title: work.title,
-      imageUrl: work.imageUrl,
+      imageUrl: getImageUrl(work.imageUrl),
       rating: work.rating,
       authorName: work.user?.username || userInfo.value?.username || '用户',
       authorId: work.userId,
@@ -997,7 +999,7 @@ const fetchBrowseWorks = async () => {
     browseWorks.value = worksData.map(work => ({
       id: work.id,
       title: work.title,
-      imageUrl: work.imageUrl,
+      imageUrl: getImageUrl(work.imageUrl),
       rating: work.rating,
       authorName: work.user?.username || '用户',
       authorId: work.userId,
@@ -1482,7 +1484,7 @@ const fetchUserFavorites = async () => {
     favoriteWorks.value = (result.works || []).map(work => ({
       id: work.id,
       title: work.title,
-      imageUrl: work.imageUrl,
+      imageUrl: getImageUrl(work.imageUrl),
       rating: work.rating,
       authorName: work.user?.username || '用户',
       authorId: work.userId,
