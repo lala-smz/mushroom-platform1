@@ -26,18 +26,23 @@ router.get('/db-charset', async (req, res) => {
   }
 });
 
-router.get('/db-info', async (req, res) => {
+router.get('/check-table', async (req, res) => {
   try {
-    const config = sequelize.config;
-    res.json({ 
-      success: true, 
-      data: {
-        database: config.database,
-        host: config.host,
-        port: config.port,
-        username: config.username
-      }
-    });
+    const result = await sequelize.query("SHOW TABLES LIKE 'product_categories'");
+    const tableExists = result[0].length > 0;
+    
+    if (tableExists) {
+      const columns = await sequelize.query("DESCRIBE product_categories");
+      const count = await sequelize.query("SELECT COUNT(*) as count FROM product_categories");
+      res.json({ 
+        success: true, 
+        tableExists: true,
+        rowCount: count[0][0].count,
+        columns: columns[0].map(col => col.Field)
+      });
+    } else {
+      res.json({ success: true, tableExists: false });
+    }
   } catch (error) {
     res.json({ success: false, error: error.message });
   }
@@ -65,95 +70,6 @@ router.get('/boxes', (req, res) => {
   ];
   
   res.json({ success: true, data: testBoxes });
-});
-
-router.post('/import-sql', async (req, res) => {
-  try {
-    const { sql } = req.body;
-    
-    if (!sql) {
-      return res.json({ success: false, error: '请提供SQL内容' });
-    }
-    
-    const statements = sql.split(';').filter(stmt => stmt.trim().length > 0);
-    let successCount = 0;
-    let skipCount = 0;
-    let errorCount = 0;
-    const errors = [];
-    
-    for (const statement of statements) {
-      const trimmedStmt = statement.trim();
-      if (!trimmedStmt || trimmedStmt.startsWith('--') || trimmedStmt.startsWith('/*')) {
-        skipCount++;
-        continue;
-      }
-      
-      try {
-        await sequelize.query(trimmedStmt);
-        successCount++;
-      } catch (error) {
-        if (error.message && error.message.includes('ER_TABLE_EXISTS_ERROR')) {
-          skipCount++;
-        } else {
-          errorCount++;
-          errors.push({ statement: trimmedStmt.substring(0, 50) + '...', error: error.message });
-        }
-      }
-    }
-    
-    res.json({ 
-      success: true, 
-      message: `导入完成`,
-      successCount,
-      skipCount,
-      errorCount,
-      errors: errors.slice(0, 10)
-    });
-  } catch (error) {
-    res.json({ success: false, error: error.message });
-  }
-});
-
-router.post('/import-sql-batch', async (req, res) => {
-  try {
-    const { batch } = req.body;
-    
-    if (!batch || !Array.isArray(batch)) {
-      return res.json({ success: false, error: '请提供SQL语句数组' });
-    }
-    
-    let successCount = 0;
-    let skipCount = 0;
-    let errorCount = 0;
-    
-    for (const sql of batch) {
-      const trimmedStmt = sql.trim();
-      if (!trimmedStmt || trimmedStmt.startsWith('--') || trimmedStmt.startsWith('/*')) {
-        skipCount++;
-        continue;
-      }
-      
-      try {
-        await sequelize.query(trimmedStmt);
-        successCount++;
-      } catch (error) {
-        if (error.message && error.message.includes('ER_TABLE_EXISTS_ERROR')) {
-          skipCount++;
-        } else {
-          errorCount++;
-        }
-      }
-    }
-    
-    res.json({ 
-      success: true, 
-      successCount,
-      skipCount,
-      errorCount
-    });
-  } catch (error) {
-    res.json({ success: false, error: error.message });
-  }
 });
 
 module.exports = router;
