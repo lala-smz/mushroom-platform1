@@ -173,12 +173,13 @@ import { apiClient } from '../api/index'
 import { useWorkStore } from '../stores/useWorkStore'
 import { useUserStore } from '../stores/useUserStore'
 import eventBus, { EventTypes } from '../utils/eventBus'
+import { uploadConfig } from '../config/upload'
 
 const router = useRouter()
 const workStore = useWorkStore()
 const userStore = useUserStore()
 
-const uploadUrl = '/api/upload'
+const uploadUrl = uploadConfig.uploadUrl
 
 const formData = reactive({
   title: '',
