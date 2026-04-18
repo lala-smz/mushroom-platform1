@@ -134,7 +134,7 @@
           <el-dropdown>
             <span class="user-info">
               <img
-                src="/images/placeholder-avatar-40.svg"
+                :src="getPlaceholderImage('40', 'avatar')"
                 alt="用户头像"
                 class="user-avatar"
               >
@@ -181,6 +181,7 @@ import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { useUserStore } from '../stores/useUserStore'
+import { getPlaceholderImage } from '../utils/imageUtils'
 
 const router = useRouter()
 const route = useRoute()

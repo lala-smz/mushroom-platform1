@@ -309,16 +309,16 @@ app.use(cors({
   credentials: true
 }));
 app.use(helmet({
-  crossOriginResourcePolicy: false,
+  crossOriginResourcePolicy: { policy: "cross-origin" },
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
-      imgSrc: ["'self'", "data:", "blob:"],
+      imgSrc: ["'self'", "data:", "blob:", "https://grateful-renewal-production-b1b1.up.railway.app"],
       scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-      connectSrc: ["'self'", "ws://localhost:*", "wss://localhost:*"],
-      mediaSrc: ["'self'", "blob:"]
+      connectSrc: ["'self'", "ws://localhost:*", "wss://localhost:*", "https://grateful-renewal-production-b1b1.up.railway.app"],
+      mediaSrc: ["'self'", "blob:", "https://grateful-renewal-production-b1b1.up.railway.app"]
     }
   }
 }));
@@ -418,6 +418,11 @@ const uploadsStatic = express.static(path.join(__dirname, 'uploads'));
 const mushroomsStatic = express.static(path.join(__dirname, 'uploads', 'mushrooms'));
 
 app.use('/uploads', (req, res, next) => {
+  // 设置 CORS 头，允许前端访问图片
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  
   // 为所有图片设置正确的 MIME 类型，特别是 webp
   const ext = path.extname(req.path).toLowerCase();
   
@@ -433,10 +438,28 @@ app.use('/uploads', (req, res, next) => {
   
   // 移除可能的缓存问题，允许浏览器重新请求资源
   res.setHeader('Cache-Control', 'public, max-age=3600');
+  
+  // 处理 OPTIONS 请求
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  
   next();
 }, uploadsStatic);
 
-app.use('/mushrooms', mushroomsStatic);
+app.use('/mushrooms', (req, res, next) => {
+  // 设置 CORS 头，允许前端访问图片
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  
+  // 处理 OPTIONS 请求
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  
+  next();
+}, mushroomsStatic);
 
 // 配置全局速率限制
 const limiter = rateLimit({

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import axios from 'axios'
+import api from '../api/index.js'
 
 export const useMushroomStore = defineStore('mushroom', {
   state: () => ({

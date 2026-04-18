@@ -182,9 +182,9 @@
               class="item-preview"
             >
               <img 
-                :src="item.image || item.mushroom?.image || '/mushroom-platform/images/placeholder-mushroom-50.svg'" 
+                :src="item.image || item.mushroom?.image || getPlaceholderImage('50')" 
                 :alt="item.mushroomName || item.mushroom?.name || '菌菇'" 
-                @error="(e) => e.target.src = '/mushroom-platform/images/placeholder-mushroom-50.svg'"
+                @error="(e) => e.target.src = getPlaceholderImage('50')"
               >
               <span>{{ item.mushroomName || item.mushroom?.name || '菌菇' }}</span>
             </div>
@@ -232,9 +232,9 @@
         <div class="result-content">
           <div class="result-image">
             <img 
-              :src="drawResult.mushroom?.image || '/mushroom-platform/images/placeholder-mushroom-150.svg'" 
+              :src="drawResult.mushroom?.image || getPlaceholderImage('150')" 
               :alt="drawResult.mushroom?.name || '未知菌菇'" 
-              @error="(e) => e.target.src = '/mushroom-platform/images/placeholder-mushroom-150.svg'"
+              @error="(e) => e.target.src = getPlaceholderImage('150')"
             >
           </div>
           <div class="result-info">

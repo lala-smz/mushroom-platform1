@@ -74,7 +74,7 @@
                 >
                   <div class="recipe-image-container">
                     <img 
-                      :src="normalizeImageUrl(recipe.image) || '/images/placeholder-recipe-200.svg'" 
+                      :src="normalizeImageUrl(recipe.image) || getPlaceholderImage('200', 'recipe')" 
                       :alt="recipe.name"
                       class="recipe-image"
                       @error="handleImageError"
@@ -149,7 +149,7 @@
                 >
                   <div class="video-thumbnail-container">
                     <img 
-                      :src="video.thumbnail || '/images/placeholder-video-300.svg'" 
+                      :src="video.thumbnail || getPlaceholderImage('300', 'video')" 
                       :alt="video.title"
                       class="video-thumbnail"
                       @error="handleImageError"

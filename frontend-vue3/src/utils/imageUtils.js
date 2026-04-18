@@ -45,6 +45,9 @@ export function getPlaceholderImage(size = '300', type = 'mushroom') {
     },
     video: {
       '300': BASE_URL + 'images/placeholder-video-300.svg'
+    },
+    avatar: {
+      '40': BASE_URL + 'images/placeholder-avatar-40.svg'
     }
   }
   
