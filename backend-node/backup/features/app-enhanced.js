@@ -2,28 +2,54 @@ const express = require('express');
 const cors = require('cors');
 const compression = require('compression');
 const multer = require('multer');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const http = require('http');
+const { Server } = require('socket.io');
 const path = require('path');
 const fs = require('fs');
 
-require('dotenv').config({ path: path.resolve(__dirname, '.env') });
+require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 
-const { sequelize, testConnection } = require('./config/db');
-const { redisClient } = require('./config/redis');
+const { sequelize, testConnection } = require('../../config/db');
+const { redisClient } = require('../../config/redis');
 
-const userRoutes = require('./routes/userRoutes');
-const adminRoutes = require('./routes/adminRoutes');
-const productRoutes = require('./routes/productRoutes');
-const categoryRoutes = require('./routes/categoryRoutes');
-const businessCategoryRoutes = require('./routes/businessCategoryRoutes');
-const mushroomRoutes = require('./routes/mushroomRoutes');
-const mushroomBoxRoutes = require('./routes/mushroomBoxRoutes');
-const orderRoutes = require('./routes/orderRoutes');
-const syncRoutes = require('./routes/syncRoutes');
+const userRoutes = require('../../routes/userRoutes');
+const adminRoutes = require('../../routes/adminRoutes');
+const productRoutes = require('../../routes/productRoutes');
+const categoryRoutes = require('../../routes/categoryRoutes');
+const businessCategoryRoutes = require('../../routes/businessCategoryRoutes');
+const mushroomRoutes = require('../../routes/mushroomRoutes');
+const mushroomBoxRoutes = require('../../routes/mushroomBoxRoutes');
+const orderRoutes = require('../../routes/orderRoutes');
+const syncRoutes = require('../../routes/syncRoutes');
 
-const models = require('./models');
+const models = require('../../models');
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:3001', 'http://localhost:3003', 'https://lala-smz.github.io', 'https://web-production-1993a.up.railway.app'],
+    credentials: true
+  }
+});
+
 const PORT = process.env.PORT || 3003;
+
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "https:"],
+      fontSrc: ["'self'"],
+      objectSrc: ["'none'"],
+      upgradeInsecureRequests: []
+    }
+  }
+}));
 
 app.use(compression({
   level: 6,
@@ -35,6 +61,26 @@ app.use(compression({
     return compression.filter(req, res);
   }
 }));
+
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: {
+    success: false,
+    message: '请求过于频繁，请稍后重试'
+  },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
+const strictLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: {
+    success: false,
+    message: '请求过于频繁，请稍后重试'
+  }
+});
 
 app.use(cors({
   origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175', 'http://localhost:5176', 'http://localhost:3001', 'http://localhost:3003', 'https://lala-smz.github.io', 'https://web-production-1993a.up.railway.app'],
@@ -56,9 +102,9 @@ app.use((req, res, next) => {
   next();
 });
 
-const uploadDir = path.join(__dirname, 'uploads');
-const mushroomDir = path.join(__dirname, 'uploads/mushrooms');
-const tempDir = path.join(__dirname, 'uploads/temp');
+const uploadDir = path.join(__dirname, '../../uploads');
+const mushroomDir = path.join(__dirname, '../../uploads/mushrooms');
+const tempDir = path.join(__dirname, '../../uploads/temp');
 
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 if (!fs.existsSync(mushroomDir)) fs.mkdirSync(mushroomDir, { recursive: true });
@@ -94,9 +140,9 @@ const upload = multer({
   }
 });
 
-const uploadsStatic = express.static(path.join(__dirname, 'uploads'));
-const mushroomsStatic = express.static(path.join(__dirname, 'uploads/mushrooms'));
-const publicStatic = express.static(path.join(__dirname, 'public'));
+const uploadsStatic = express.static(path.join(__dirname, '../../uploads'));
+const mushroomsStatic = express.static(path.join(__dirname, '../../uploads/mushrooms'));
+const publicStatic = express.static(path.join(__dirname, '../../public'));
 
 app.use('/uploads', uploadsStatic);
 app.use('/mushrooms', mushroomsStatic);
@@ -146,15 +192,15 @@ app.post('/api/upload', upload.array('files', 10), async (req, res) => {
   }
 });
 
-app.use('/api/users', userRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/products', productRoutes);
-app.use('/api/categories', categoryRoutes);
-app.use('/api/business-categories', businessCategoryRoutes);
-app.use('/api/mushrooms', mushroomRoutes);
-app.use('/api/boxes', mushroomBoxRoutes);
-app.use('/api/orders', orderRoutes);
-app.use('/api/sync', syncRoutes);
+app.use('/api/users', apiLimiter, userRoutes);
+app.use('/api/admin', apiLimiter, adminRoutes);
+app.use('/api/products', apiLimiter, productRoutes);
+app.use('/api/categories', apiLimiter, categoryRoutes);
+app.use('/api/business-categories', apiLimiter, businessCategoryRoutes);
+app.use('/api/mushrooms', apiLimiter, mushroomRoutes);
+app.use('/api/boxes', apiLimiter, mushroomBoxRoutes);
+app.use('/api/orders', apiLimiter, orderRoutes);
+app.use('/api/sync', apiLimiter, syncRoutes);
 
 app.get('*', (req, res) => {
   if (req.path.startsWith('/api/')) {
@@ -163,7 +209,7 @@ app.get('*', (req, res) => {
       message: '接口不存在'
     });
   } else {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, '../../public', 'index.html'));
   }
 });
 
@@ -172,6 +218,32 @@ app.use((error, req, res, next) => {
   res.status(500).json({
     success: false,
     message: process.env.NODE_ENV === 'production' ? '服务器内部错误' : error.message
+  });
+});
+
+io.on('connection', (socket) => {
+  console.log('用户连接:', socket.id);
+
+  socket.on('joinRoom', (roomId) => {
+    socket.join(roomId);
+    console.log(`用户 ${socket.id} 加入房间: ${roomId}`);
+  });
+
+  socket.on('leaveRoom', (roomId) => {
+    socket.leave(roomId);
+    console.log(`用户 ${socket.id} 离开房间: ${roomId}`);
+  });
+
+  socket.on('sendMessage', (data) => {
+    io.to(data.roomId).emit('receiveMessage', data);
+  });
+
+  socket.on('drawResult', (data) => {
+    io.to(data.roomId).emit('receiveDrawResult', data);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('用户断开连接:', socket.id);
   });
 });
 
@@ -185,9 +257,10 @@ const startServer = async () => {
   try {
     await testConnection();
     
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.log(`服务器运行在 http://localhost:${PORT}`);
       console.log(`健康检查: http://localhost:${PORT}/health`);
+      console.log('Socket.IO 实时通信已启用');
     });
   } catch (error) {
     if (error.name === 'SequelizeConnectionError' && error.original && error.original.code === 'ER_BAD_DB_ERROR') {

@@ -30,8 +30,7 @@ const sequelize = new Sequelize(
     dialectOptions: {
       charset: 'utf8mb4',
       supportBigNumbers: true,
-      bigNumberStrings: true,
-      initSql: 'SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci;'
+      bigNumberStrings: true
     },
     query: {
       raw: false
