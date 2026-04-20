@@ -869,8 +869,8 @@ const startServer = async () => {
       console.log(`健康检查: http://localhost:${PORT}/health`);
       console.log(`WebSocket服务已启动`);
       
-      // 启动蘑菇数据定时同步
-      mushroomDataService.startScheduledSync();
+      // 暂时禁用蘑菇数据定时同步，减少内存使用
+      // mushroomDataService.startScheduledSync();
       
       // 暂时禁用季节信息定时推送，因为表结构可能不完整
       // seasonalPushService.startScheduledPush();
