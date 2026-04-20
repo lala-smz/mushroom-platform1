@@ -1,13 +1,8 @@
 const express = require('express');
 const cors = require('cors');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
 const compression = require('compression');
-const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const http = require('http');
-const { Server } = require('socket.io');
 
 // 确保在最开始加载环境变量
 require('dotenv').config({ path: path.resolve(__dirname, '.env') });
@@ -278,22 +273,6 @@ Object.values(models).forEach(model => {
 // 创建Express应用
 const app = express();
 const PORT = process.env.PORT || 3003;
-
-// 创建HTTP服务器
-const server = http.createServer(app);
-
-// 初始化Socket.IO
-const io = new Server(server, {
-  cors: {
-    origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175', 'http://localhost:5176', 'http://localhost:3001', 'http://localhost:3003', 'https://lala-smz.github.io'],
-    methods: ['GET', 'POST'],
-    credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization']
-  }
-});
-
-// 导出io实例，供其他模块使用
-module.exports.io = io;
 
 // 配置中间件
 app.use(compression({
@@ -848,15 +827,6 @@ sequelize.sync({ alter: true }).then(() => {
   console.error('数据库同步失败:', err);
 });
 
-// 引入蘑菇数据服务
-const mushroomDataService = require('./services/mushroomDataService');
-// 引入季节信息推送服务
-const seasonalPushService = require('./services/seasonalPushService');
-// 引入烹饪视频服务
-const cookingVideoService = require('./services/cookingVideoService');
-// 引入智能推送服务
-const smartPushService = require('./services/smartPushService');
-
 // 启动服务器
 const startServer = async () => {
   try {
@@ -864,22 +834,9 @@ const startServer = async () => {
     await testConnection();
     
     // 启动服务器
-    server.listen(PORT, () => {
+    app.listen(PORT, () => {
       console.log(`服务器运行在 http://localhost:${PORT}`);
       console.log(`健康检查: http://localhost:${PORT}/health`);
-      console.log(`WebSocket服务已启动`);
-      
-      // 暂时禁用蘑菇数据定时同步，减少内存使用
-      // mushroomDataService.startScheduledSync();
-      
-      // 暂时禁用季节信息定时推送，因为表结构可能不完整
-      // seasonalPushService.startScheduledPush();
-      
-      // 暂时禁用烹饪视频定时推送，因为表结构可能不完整
-      // cookingVideoService.startScheduledPush();
-      
-      // 暂时禁用智能推送服务，因为表结构可能不完整
-      // smartPushService.startScheduledPush();
     });
   } catch (error) {
     if (error.name === 'SequelizeConnectionError' && error.original && error.original.code === 'ER_BAD_DB_ERROR') {
