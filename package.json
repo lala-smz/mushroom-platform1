@@ -2,11 +2,15 @@
   "name": "mushroom-platform",
   "version": "1.0.0",
   "description": "蘑菇网综合平台",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
   "scripts": {
     "start": "cd backend-node && npm run start",
     "dev:backend": "cd backend-node && npm run dev",
     "dev:frontend": "cd frontend-vue3 && npm run dev",
-    "build:frontend": "cd frontend-vue3 && npm install && NODE_OPTIONS='--max-old-space-size=4096' npm run build",
+    "build:frontend": "cd frontend-vue3 && npm install --omit=dev && NODE_OPTIONS='--max-old-space-size=4096' npm run build",
     "deploy:prod": "npm run build:frontend && cd backend-node && npm start",
     "install:all": "npm install && cd backend-node && npm install && cd ../frontend-vue3 && npm install"
   },
