@@ -6,7 +6,7 @@
     "start": "cd backend-node && npm run start",
     "dev:backend": "cd backend-node && npm run dev",
     "dev:frontend": "cd frontend-vue3 && npm run dev",
-    "build:frontend": "cd frontend-vue3 && npm install && npm run build",
+    "build:frontend": "cd frontend-vue3 && npm install && NODE_OPTIONS='--max-old-space-size=4096' npm run build",
     "deploy:prod": "npm run build:frontend && cd backend-node && npm start",
     "install:all": "npm install && cd backend-node && npm install && cd ../frontend-vue3 && npm install"
   },
