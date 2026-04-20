@@ -236,149 +236,179 @@ class MushroomDataService {
   }
 
   async createSyncLog(syncType) {
-    const log = await SyncLog.create({
-      syncType,
-      status: 'running',
-      startAt: new Date(),
-      syncConfig: JSON.stringify(this.currentConfig)
-    });
-    return log;
+    try {
+      const log = await SyncLog.create({
+        syncType,
+        status: 'running',
+        startAt: new Date(),
+        syncConfig: JSON.stringify(this.currentConfig)
+      });
+      return log;
+    } catch (error) {
+      console.warn('[SyncLog] 无法创建同步日志，表可能不存在:', error.message);
+      return null;
+    }
   }
 
   async updateSyncLog(logId, result) {
-    const endAt = new Date();
-    const duration = endAt.getTime() - result.startAt.getTime();
+    if (!logId) return;
     
-    await SyncLog.update({
-      status: result.success ? 'success' : 'failed',
-      endAt,
-      duration,
-      totalCount: result.totalCount || 0,
-      createdCount: result.createdCount || 0,
-      updatedCount: result.updatedCount || 0,
-      failedCount: result.failedCount || 0,
-      errorMessage: result.errorMessage || null,
-      notes: result.notes || null
-    }, {
-      where: { id: logId }
-    });
+    try {
+      const endAt = new Date();
+      const duration = endAt.getTime() - result.startAt.getTime();
+      
+      await SyncLog.update({
+        status: result.success ? 'success' : 'failed',
+        endAt,
+        duration,
+        totalCount: result.totalCount || 0,
+        createdCount: result.createdCount || 0,
+        updatedCount: result.updatedCount || 0,
+        failedCount: result.failedCount || 0,
+        errorMessage: result.errorMessage || null,
+        notes: result.notes || null
+      }, {
+        where: { id: logId }
+      });
+    } catch (error) {
+      console.warn('[SyncLog] 无法更新同步日志:', error.message);
+    }
   }
 
   async cleanOldLogs() {
     const retentionDays = this.currentConfig.syncHistoryRetentionDays;
     if (retentionDays <= 0) return;
     
-    const cutoffDate = new Date();
-    cutoffDate.setDate(cutoffDate.getDate() - retentionDays);
-    
-    await SyncLog.destroy({
-      where: {
-        createdAt: { [Op.lt]: cutoffDate }
-      }
-    });
-    
-    logger.info('MushroomData', `清理了 ${retentionDays} 天前的同步日志`);
+    try {
+      const cutoffDate = new Date();
+      cutoffDate.setDate(cutoffDate.getDate() - retentionDays);
+      
+      await SyncLog.destroy({
+        where: {
+          createdAt: { [Op.lt]: cutoffDate }
+        }
+      });
+      
+      logger.info('MushroomData', `清理了 ${retentionDays} 天前的同步日志`);
+    } catch (error) {
+      console.warn('[SyncLog] 无法清理旧日志:', error.message);
+    }
   }
 
   async getSyncHistory(options = {}) {
-    const { 
-      syncType = null, 
-      status = null, 
-      page = 1, 
-      limit = 20,
-      startDate = null,
-      endDate = null 
-    } = options;
-    
-    const where = {};
-    
-    if (syncType) where.syncType = syncType;
-    if (status) where.status = status;
-    if (startDate) where.startAt = { [Op.gte]: startDate };
-    if (endDate) where.startAt = { ...where.startAt, [Op.lte]: endDate };
-    
-    const result = await SyncLog.findAndCountAll({
-      where,
-      order: [['startAt', 'DESC']],
-      limit,
-      offset: (page - 1) * limit
-    });
-    
-    return {
-      logs: result.rows,
-      total: result.count,
-      page,
-      limit
-    };
+    try {
+      const { 
+        syncType = null, 
+        status = null, 
+        page = 1, 
+        limit = 20,
+        startDate = null,
+        endDate = null 
+      } = options;
+      
+      const where = {};
+      
+      if (syncType) where.syncType = syncType;
+      if (status) where.status = status;
+      if (startDate) where.startAt = { [Op.gte]: startDate };
+      if (endDate) where.startAt = { ...where.startAt, [Op.lte]: endDate };
+      
+      const result = await SyncLog.findAndCountAll({
+        where,
+        order: [['startAt', 'DESC']],
+        limit,
+        offset: (page - 1) * limit
+      });
+      
+      return {
+        logs: result.rows,
+        total: result.count,
+        page,
+        limit
+      };
+    } catch (error) {
+      console.warn('[SyncLog] 无法获取同步历史:', error.message);
+      return { logs: [], total: 0, page: 1, limit: 20 };
+    }
   }
 
   async getSyncStatistics(syncType = null) {
-    const where = syncType ? { syncType } : {};
-    
-    const stats = await SyncLog.findAll({
-      where,
-      attributes: [
-        'status',
-        [sequelize.fn('COUNT', sequelize.col('id')), 'count'],
-        [sequelize.fn('AVG', sequelize.col('duration')), 'avgDuration'],
-        [sequelize.fn('SUM', sequelize.col('totalCount')), 'totalRecords'],
-        [sequelize.fn('SUM', sequelize.col('createdCount')), 'totalCreated'],
-        [sequelize.fn('SUM', sequelize.col('updatedCount')), 'totalUpdated']
-      ],
-      group: ['status'],
-      raw: true
-    });
-    
-    const result = {};
-    let totalCount = 0;
-    
-    stats.forEach(stat => {
-      result[stat.status] = {
-        count: parseInt(stat.count),
-        avgDuration: parseFloat(stat.avgDuration) || 0,
-        totalRecords: parseInt(stat.totalRecords) || 0,
-        totalCreated: parseInt(stat.totalCreated) || 0,
-        totalUpdated: parseInt(stat.totalUpdated) || 0
-      };
-      totalCount += parseInt(stat.count);
-    });
-    
-    result.total = totalCount;
-    
-    const recentLogs = await SyncLog.findAll({
-      where,
-      order: [['startAt', 'DESC']],
-      limit: 5
-    });
-    
-    return { statistics: result, recentLogs };
+    try {
+      const where = syncType ? { syncType } : {};
+      
+      const stats = await SyncLog.findAll({
+        where,
+        attributes: [
+          'status',
+          [sequelize.fn('COUNT', sequelize.col('id')), 'count'],
+          [sequelize.fn('AVG', sequelize.col('duration')), 'avgDuration'],
+          [sequelize.fn('SUM', sequelize.col('totalCount')), 'totalRecords'],
+          [sequelize.fn('SUM', sequelize.col('createdCount')), 'totalCreated'],
+          [sequelize.fn('SUM', sequelize.col('updatedCount')), 'totalUpdated']
+        ],
+        group: ['status'],
+        raw: true
+      });
+      
+      const result = {};
+      let totalCount = 0;
+      
+      stats.forEach(stat => {
+        result[stat.status] = {
+          count: parseInt(stat.count),
+          avgDuration: parseFloat(stat.avgDuration) || 0,
+          totalRecords: parseInt(stat.totalRecords) || 0,
+          totalCreated: parseInt(stat.totalCreated) || 0,
+          totalUpdated: parseInt(stat.totalUpdated) || 0
+        };
+        totalCount += parseInt(stat.count);
+      });
+      
+      result.total = totalCount;
+      
+      const recentLogs = await SyncLog.findAll({
+        where,
+        order: [['startAt', 'DESC']],
+        limit: 5
+      });
+      
+      return { statistics: result, recentLogs };
+    } catch (error) {
+      console.warn('[SyncLog] 无法获取同步统计:', error.message);
+      return { statistics: { total: 0 }, recentLogs: [] };
+    }
   }
 
   async getLastSyncInfo(syncType = null) {
-    const where = syncType ? { syncType } : {};
-    
-    const lastLog = await SyncLog.findOne({
-      where,
-      order: [['startAt', 'DESC']]
-    });
-    
-    if (!lastLog) {
+    try {
+      const where = syncType ? { syncType } : {};
+      
+      const lastLog = await SyncLog.findOne({
+        where,
+        order: [['startAt', 'DESC']]
+      });
+      
+      if (!lastLog) {
+        return null;
+      }
+      
+      return {
+        id: lastLog.id,
+        syncType: lastLog.syncType,
+        status: lastLog.status,
+        startAt: lastLog.startAt,
+        endAt: lastLog.endAt,
+        duration: lastLog.duration,
+        totalCount: lastLog.totalCount,
+        createdCount: lastLog.createdCount,
+        updatedCount: lastLog.updatedCount,
+        failedCount: lastLog.failedCount,
+        errorMessage: lastLog.errorMessage
+      };
+    } catch (error) {
+      console.warn('[SyncLog] 无法获取最后同步信息:', error.message);
       return null;
     }
-    
-    return {
-      id: lastLog.id,
-      syncType: lastLog.syncType,
-      status: lastLog.status,
-      startAt: lastLog.startAt,
-      endAt: lastLog.endAt,
-      duration: lastLog.duration,
-      totalCount: lastLog.totalCount,
-      createdCount: lastLog.createdCount,
-      updatedCount: lastLog.updatedCount,
-      failedCount: lastLog.failedCount,
-      errorMessage: lastLog.errorMessage
-    };
   }
 
   async configureFromHistory(options = {}) {
