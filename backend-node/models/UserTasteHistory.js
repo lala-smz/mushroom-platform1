@@ -43,19 +43,8 @@ const UserTasteHistory = sequelize.define('UserTasteHistory', {
   tableName: 'user_taste_histories',
   timestamps: true,
   indexes: [
-    {
-      fields: ['userId']
-    },
-    {
-      fields: ['workId']
-    },
-    {
-      fields: ['userId', 'workId'],
-      unique: true
-    },
-    {
-      fields: ['tasteDate']
-    }
+    { fields: ['userId', 'workId'], unique: true },
+    { fields: ['tasteDate'] }
   ]
 });
 

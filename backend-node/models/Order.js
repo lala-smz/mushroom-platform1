@@ -84,22 +84,10 @@ const Order = sequelize.define('Order', {
   timestamps: true,
   comment: '订单表',
   indexes: [
-    {
-      fields: ['userId']
-    },
-    {
-      fields: ['orderNo'],
-      unique: true
-    },
-    {
-      fields: ['status']
-    },
-    {
-      fields: ['createdAt']
-    },
-    {
-      fields: ['paymentTime']
-    }
+    { fields: ['userId'] },
+    { fields: ['status'] },
+    { fields: ['createdAt'] },
+    { fields: ['paymentTime'] }
   ]
 });
 

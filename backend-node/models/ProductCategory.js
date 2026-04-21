@@ -67,9 +67,7 @@ const ProductCategory = sequelize.define('ProductCategory', {
     { fields: ['level'], name: 'idx_level' },
     { fields: ['parentKey'], name: 'idx_parent_key' },
     { fields: ['status'], name: 'idx_status' },
-    { fields: ['key'], name: 'idx_key', unique: true },
-    { fields: ['level', 'parentKey', 'status'], name: 'idx_level_parent_status' },
-    { fields: ['level', 'sortOrder'], name: 'idx_level_sortorder' }
+    { fields: ['level', 'parentKey', 'status'], name: 'idx_level_parent_status' }
   ],
   defaultScope: {
     order: [['sortOrder', 'ASC'], ['createdAt', 'DESC']]

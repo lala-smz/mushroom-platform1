@@ -121,27 +121,10 @@ const Recipe = sequelize.define('Recipe', {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   indexes: [
-    {
-      fields: ['status']
-    },
-    {
-      fields: ['rating']
-    },
-    {
-      fields: ['popularity']
-    },
-    {
-      fields: ['difficulty']
-    },
-    {
-      fields: ['cuisineType']
-    },
-    {
-      fields: ['mealType']
-    },
-    {
-      fields: ['createdAt']
-    }
+    { fields: ['status'] },
+    { fields: ['rating', 'popularity'] },
+    { fields: ['difficulty'] },
+    { fields: ['createdAt'] }
   ]
 });
 

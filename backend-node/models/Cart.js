@@ -42,19 +42,7 @@ const Cart = sequelize.define('Cart', {
   timestamps: true,
   comment: '购物车表',
   indexes: [
-    {
-      fields: ['userId']
-    },
-    {
-      fields: ['productId']
-    },
-    {
-      fields: ['type']
-    },
-    {
-      fields: ['userId', 'productId', 'type'],
-      unique: true
-    }
+    { fields: ['userId', 'productId', 'type'], unique: true }
   ]
 });
 

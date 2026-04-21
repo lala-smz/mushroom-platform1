@@ -54,19 +54,8 @@ const WorkRating = sequelize.define('WorkRating', {
   tableName: 'work_ratings',
   timestamps: true,
   indexes: [
-    {
-      fields: ['workId']
-    },
-    {
-      fields: ['userId']
-    },
-    {
-      fields: ['workId', 'userId'],
-      unique: true
-    },
-    {
-      fields: ['createdAt']
-    }
+    { fields: ['workId', 'userId'], unique: true },
+    { fields: ['createdAt'] }
   ]
 });
 

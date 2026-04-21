@@ -54,18 +54,7 @@ const RatingHistory = sequelize.define('RatingHistory', {
   tableName: 'rating_histories',
   timestamps: true,
   indexes: [
-    {
-      fields: ['workId']
-    },
-    {
-      fields: ['period']
-    },
-    {
-      fields: ['periodStart']
-    },
-    {
-      fields: ['workId', 'period', 'periodStart']
-    }
+    { fields: ['workId', 'period', 'periodStart'] }
   ]
 });
 

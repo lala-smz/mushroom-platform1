@@ -60,23 +60,9 @@ const User = sequelize.define('User', {
   timestamps: true,
   comment: '用户表',
   indexes: [
-    {
-      fields: ['username'],
-      unique: true
-    },
-    {
-      fields: ['email'],
-      unique: true
-    },
-    {
-      fields: ['role']
-    },
-    {
-      fields: ['status']
-    },
-    {
-      fields: ['createdAt']
-    }
+    { fields: ['role'] },
+    { fields: ['status'] },
+    { fields: ['createdAt'] }
   ]
 });
 

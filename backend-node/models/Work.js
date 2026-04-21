@@ -83,24 +83,10 @@ const Work = sequelize.define('Work', {
   tableName: 'works',
   timestamps: true,
   indexes: [
-    {
-      fields: ['userId']
-    },
-    {
-      fields: ['mushroomType']
-    },
-    {
-      fields: ['rating']
-    },
-    {
-      fields: ['likes']
-    },
-    {
-      fields: ['totalScore']
-    },
-    {
-      fields: ['createdAt']
-    }
+    { fields: ['userId'] },
+    { fields: ['mushroomType', 'status'] },
+    { fields: ['rating', 'likes', 'totalScore'] },
+    { fields: ['createdAt'] }
   ]
 });
 

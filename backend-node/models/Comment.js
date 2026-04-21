@@ -62,15 +62,8 @@ const Comment = sequelize.define('Comment', {
   tableName: 'comments',
   timestamps: true,
   indexes: [
-    {
-      fields: ['workId']
-    },
-    {
-      fields: ['userId']
-    },
-    {
-      fields: ['createdAt']
-    }
+    { fields: ['workId', 'createdAt'] },
+    { fields: ['userId'] }
   ]
 });
 

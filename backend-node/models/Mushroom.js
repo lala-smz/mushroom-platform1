@@ -150,24 +150,9 @@ const Mushroom = sequelize.define('Mushroom', {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   indexes: [
-    {
-      fields: ['name']
-    },
-    {
-      fields: ['category']
-    },
-    {
-      fields: ['type']
-    },
-    {
-      fields: ['status']
-    },
-    {
-      fields: ['cultivationDifficulty']
-    },
-    {
-      fields: ['createdAt']
-    }
+    { fields: ['name'] },
+    { fields: ['category', 'type', 'status'] },
+    { fields: ['createdAt'] }
   ]
 });
 

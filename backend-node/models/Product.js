@@ -97,27 +97,10 @@ const Product = sequelize.define('Product', {
   timestamps: true,
   comment: '商品表',
   indexes: [
-    {
-      fields: ['sellerId']
-    },
-    {
-      fields: ['category']
-    },
-    {
-      fields: ['status']
-    },
-    {
-      fields: ['price']
-    },
-    {
-      fields: ['viewCount']
-    },
-    {
-      fields: ['createdAt']
-    },
-    {
-      fields: ['isHot']
-    }
+    { fields: ['sellerId'] },
+    { fields: ['category', 'status'] },
+    { fields: ['status'] },
+    { fields: ['createdAt'] }
   ]
 });
 

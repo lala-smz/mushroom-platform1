@@ -72,24 +72,9 @@ const OperationLog = sequelize.define('OperationLog', {
   timestamps: true,
   comment: '操作日志表',
   indexes: [
-    {
-      fields: ['userId']
-    },
-    {
-      fields: ['role']
-    },
-    {
-      fields: ['module']
-    },
-    {
-      fields: ['action']
-    },
-    {
-      fields: ['targetId']
-    },
-    {
-      fields: ['createdAt']
-    }
+    { fields: ['userId'] },
+    { fields: ['module', 'action', 'role'] },
+    { fields: ['createdAt'] }
   ]
 });
 
