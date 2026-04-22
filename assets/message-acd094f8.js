@@ -1,0 +1,1 @@
+import{E as e}from"./index-91a4bdd4.js";const a={success(s){e.success({message:s,duration:2e3})},error(s){e.error({message:s,duration:3e3})},warning(s){e.warning({message:s,duration:2500})},info(s){e.info({message:s,duration:2e3})}};export{a as m};

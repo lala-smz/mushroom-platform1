@@ -1,2 +1,0 @@
-{"timestamp":"2026-02-10T09:38:38.840Z","level":"info","message":"创建支付订单","data":{"orderNo":"ORD1770716318820668","userId":2,"totalAmount":0.01,"paymentMethod":"alipay"}}
-{"timestamp":"2026-02-10T09:38:43.906Z","level":"info","message":"支付重试","data":{"orderNo":"ORD1770716318820668","userId":2,"paymentMethod":"alipay","retryCount":1}}

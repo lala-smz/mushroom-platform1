@@ -1,3 +1,0 @@
-{"timestamp":"2026-04-10T06:31:24.922Z","level":"info","message":"创建支付订单","data":{"orderNo":"ORD1775802684901698","userId":2,"totalAmount":59.82,"paymentMethod":"alipay"}}
-{"timestamp":"2026-04-10T06:51:09.953Z","level":"info","message":"创建支付订单","data":{"orderNo":"ORD1775803869933450","userId":2,"totalAmount":59.82,"paymentMethod":"alipay"}}
-{"timestamp":"2026-04-10T06:59:46.253Z","level":"info","message":"创建支付订单","data":{"orderNo":"ORD1775804386242573","userId":2,"totalAmount":29.91,"paymentMethod":"alipay"}}
