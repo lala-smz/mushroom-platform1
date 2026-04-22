@@ -7,7 +7,7 @@ export default defineConfig(({ mode }) => {
   
   return {
     root: path.resolve(__dirname, '.'),
-    base: isProduction ? '/' : '/mushroom-platform/',
+    base: isProduction ? '/mushroom-platform/' : '/',
     
     plugins: [
       vue()
