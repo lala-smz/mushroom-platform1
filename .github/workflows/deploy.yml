@@ -1,46 +1,43 @@
 name: Deploy to GitHub Pages
 
 on:
+  # 推送到 main 分支时触发部署
   push:
-    branches:
-      - main
+    branches: [main]
+  # 也可以手动触发
+  workflow_dispatch:
 
+# 关键：给工作流开启写入权限
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Checkout 代码
+        uses: actions/checkout@v5 # 升级到兼容 Node 20+ 的版本
         with:
-          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }} # 强制使用带权限的 token
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: 安装 Node.js
+        uses: actions/setup-node@v4 # 升级 setup-node 版本
         with:
-          node-version: '20'
+          node-version: 20
           cache: 'npm'
-          cache-dependency-path: frontend-vue3/package-lock.json
 
-      - name: Install frontend dependencies
-        working-directory: frontend-vue3
+      - name: 安装依赖
         run: npm ci
-
-      - name: Build frontend
         working-directory: frontend-vue3
-        run: npm run build
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: peaceiris/actions-gh-pages@v4
+      - name: 构建项目（Vite）
+        run: npm run build
+        working-directory: frontend-vue3
+
+      - name: 部署到 GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4 # 用稳定的 gh-pages 部署 action
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./frontend-vue3/dist
-          destination_dir: mushroom-platform
+          publish_dir: ./frontend-vue3/dist # Vite 构建产物的目录
