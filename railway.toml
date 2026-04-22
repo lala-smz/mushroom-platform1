@@ -1,5 +1,5 @@
 [build]
-builder = "Node.js"
+builder = "Nixpacks"
 buildCommand = "cd backend-node && npm install --production && cd ../frontend-vue3 && npm install --omit=dev && npm run build"
 
 [deploy]
